@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "SalesTracker",
+    "slug": "SalesTracker",
+    "privacy": "public",
+    "sdkVersion": "33.0.0",
+    "ios": {
+        "bundleIdentifier": "com.akbartravels.salesapp",
+        "buildNumber": "2",
+        "infoPlist": {
+          "UIBackgroundModes": [
+            "location",
+            "fetch"
+          ],
+          "NSLocationWhenInUseUsageDescription": "We need to access location for guide navigation",
+          "NSLocationAlwaysAndWhenInUseUsageDescription": "We need to access location for guide navigation",
+          "NSLocationAlwaysUsageDescription": "We need to access location for guide navigation"
+        },
+        "config": {
+          "googleMapsApiKey": "AIzaSyAjgFon9IQf6jdNb94Q0AgFquQ3S4sT8M4"
+        }
+        ,
+        "supportsTablet": true
+    },
+    "android": {
+      "package": "com.akbartravels.salestracker",
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyBXWcdh6KO9fnzCysUKd0bAAe-pF1-Jkgg" }   
+     }
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/app-icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+   
+  }
+}
