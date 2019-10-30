@@ -1,20 +1,18 @@
 {
   "expo": {
-    "name": "SalesTracker",
-    "slug": "SalesTracker",
+    "name": "Sales Companion",
+    "slug": "SalesCompanion",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "ios": {
         "bundleIdentifier": "com.akbartravels.salesapp",
-        "buildNumber": "2",
+        "buildNumber": "3",
         "infoPlist": {
-          "UIBackgroundModes": [
-            "location",
-            "fetch"
-          ],
           "NSLocationWhenInUseUsageDescription": "We need to access location for guide navigation",
           "NSLocationAlwaysAndWhenInUseUsageDescription": "We need to access location for guide navigation",
-          "NSLocationAlwaysUsageDescription": "We need to access location for guide navigation"
+          "NSLocationAlwaysUsageDescription": "We need to access location for guide navigation",
+          "NSCameraUsageDescription": "We need to access Camera to take picture for related Task!",
+          "NSPhotoLibraryUsageDescription": "We need to access Photos to upload related Task!"
         },
         "config": {
           "googleMapsApiKey": "AIzaSyAjgFon9IQf6jdNb94Q0AgFquQ3S4sT8M4"

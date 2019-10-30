@@ -26,6 +26,10 @@ const Action  = {
 	PASSWORD_CHANGE: 'password_change',
 	WRONG_PASSWORD: 'wrong_password',
 	FORGOT_PASSWORD: 'forgot_password',
+	VIEW_ATTENDANCE: 'attendance',
+	CHECK_STATUS: 'attendance_status',
+	CAPTURE: 'attendance_capture',
+
 
 	//TASK
 	VIEW_TASK: 'view_task',

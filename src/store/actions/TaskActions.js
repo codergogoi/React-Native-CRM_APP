@@ -65,6 +65,46 @@ export const UpdateLocation = (postData) => (dispatch) => {
 };
 
 
+export const AddNewClient = (postData) => (dispatch) => {
+
+	const { client_name, client_address, email, phone_number,contact_person, appointment_date, emp_id} = postData;
+	
+	axios.defaults.baseURL = BASE_URL;
+
+		axios.defaults.headers.common['Authorization'] = APP_TOKEN();
+		axios
+		.post('client/add', {
+			emp_id: emp_id,
+			end_date: appointment_date,
+			name: client_name,
+			address: client_address,
+			phone_number: phone_number,
+			email: email,
+			contact_person: contact_person
+		})
+		.then((res) =>{
+			
+			const status = parseInt(res.data.status);
+			
+				if (status === 200) {
+					const responseString = JSON.parse(JSON.stringify(res.data));
+                    let tasks = responseString.data;
+					dispatch({
+						type: Actions.ADD_TASK,
+						payload: tasks
+					})
+				}else{
+					dispatch({
+						type: Actions.ADD_TASK,
+						payload: []
+					})
+				}
+			}
+		)
+		.catch((error) => console.log(' Error Encountered'));
+	// }).done();
+
+};
 
 
 export const AddTask = (postData) => (dispatch) => {

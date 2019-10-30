@@ -8,7 +8,7 @@ import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import { Container, Header, Title, Content, Left, Right, Body, Textarea, Input, Item, Picker , DatePicker} from 'native-base';
 import {  StyleSheet, TouchableOpacity, Text, Image, View, ScrollView, Platform, Alert } from 'react-native';
 import MenuIcon from '../../images/back_arrow.png';
-import { AddTask, GetClients, DismissAlert } from '../../store/actions/TaskActions';
+import { AddTask, GetClients, DismissAlert, AddNewClient } from '../../store/actions/TaskActions';
 import FinishIcon from '../../images/finish_icon.png';
 import { EMP_ID } from '../../store/actions/AppConst';
 import { BackHandler } from 'react-native';
@@ -29,7 +29,10 @@ class AddTaskView extends Component {
 			remarks: '',
 			description: '',
 			priority: '',
-			appointment_date: new Date()
+			appointment_date: new Date(),
+			isNewClient: false,
+			email: '',
+
 		};
 
 		this.state = {appointment_date: new Date()};
@@ -73,16 +76,32 @@ class AddTaskView extends Component {
 		if(value === null){
 			return;
 		}else{
-			const { clients } = this.props;
-			let client = clients.find(u => u.id === value);
-			this.setState({
-				client_id: client.id,
-				client_name: client.client_name,
-				client_address: client.address,
-				phone_number: client.client_phone,
-				lat: client.lat,
-				lng: client.lng
-			}); 
+
+			if(value === 'New'){
+				this.setState({
+					client: value,
+					isNewClient: true,
+					client_name: '',
+					client_address: '',
+					client_phone: ''
+				});
+			}else{
+
+				const { clients } = this.props;
+				
+				let client = clients.find(u => u.id === value);
+
+				this.setState({
+					client_id: client.id,
+					client_name: client.client_name,
+					client_address: client.address,
+					phone_number: client.client_phone,
+					lat: client.lat,
+					lng: client.lng,
+					isNewClient: false
+				});
+			}
+
 		}
 
 	}
@@ -99,20 +118,40 @@ class AddTaskView extends Component {
 
 		isCompleted = true;
 		const emp_id = EMP_ID();
-		const { client_id, priority ,task_title, client_address, phone_number, contact_person, remarks, description, appointment_date, lat, lng } = this.state;
+		const { client_id, priority ,task_title, email, client_address, client_name,phone_number, contact_person, remarks, description, appointment_date, lat, lng } = this.state;
 
-		if(task_title === ""){
-			this.onShowAlert('Task Title is Empty');
-			return;
-		}else if(description === ""){
-			this.onShowAlert('Task Description is Empty')
-			return;
-		} else if(client_id === ""){
-			this.onShowAlert('Select Client for this task');
-			return;
-		}	
+		if(this.state.isNewClient){
 
-		this.props.AddTask({ client_id, emp_id, priority, task_title, client_address, phone_number, contact_person, remarks, description, appointment_date, lat, lng});		
+			if(client_name === ""){
+				this.onShowAlert('Client Name is Required!');
+				return;
+			}else if(client_address === ""){
+				this.onShowAlert('Client Address is Required!')
+				return;
+			} else if(phone_number === ""){
+				this.onShowAlert('Client Contact Number is Required!');
+				return;
+			}	
+
+			this.props.AddNewClient({ client_name, emp_id, client_address, phone_number, contact_person,  appointment_date, email });		
+
+		}else{
+
+			if(task_title === ""){
+				this.onShowAlert('Task Title is Empty');
+				return;
+			}else if(description === ""){
+				this.onShowAlert('Task Description is Empty')
+				return;
+			} else if(client_id === ""){
+				this.onShowAlert('Select Client for this task');
+				return;
+			}	
+	
+			this.props.AddTask({ client_id, emp_id, priority, task_title, client_address, phone_number, contact_person, remarks, description, appointment_date, lat, lng});		
+	
+		}
+
 	}
 	
 	onShowAlert = (msg) =>{
@@ -128,6 +167,70 @@ class AddTaskView extends Component {
 			{cancelable: false},
 		  );
 		  return;
+
+	}
+
+
+
+	onChangeClient = (value) => {
+
+		if(value === 'New'){
+			this.setState({
+				client: value,
+				isNewClient: true,
+				client_name: '',
+				client_address: '',
+				client_phone: ''
+			});
+		}else{
+			this.setState({
+				client: value,
+				isNewClient: false
+			});
+		}
+		 
+	}
+
+	newClient = () => {
+
+		const { client_name ,contact_person, client_address, phone_number, email } = this.state;
+
+		return (
+			<View>
+				<View style={styles.itemStyle}>
+					<Item>
+						<Input first  placeholder="New Client Name" value={client_name} onChangeText={(text) => this.setState({client_name: text})}/>
+					</Item>
+				</View>
+
+				<View style={styles.itemStyle}>
+					<Item>								
+						<Textarea  style={styles.commentText} onChangeText={(text) => (this.setState({
+							client_address: text
+						}))} rowSpan={4} bordered placeholder="Client Address" value={client_address} />
+					</Item>
+				</View>
+
+				<View style={styles.itemStyle}>
+					<Item>
+						<Input first  placeholder="Email ID" value={email} onChangeText={(text) => this.setState({email: text})}/>
+					</Item>
+				</View>
+				
+				<View style={styles.itemStyle}>
+					<Item>
+						<Input first  placeholder="Contact Person" value={contact_person} onChangeText={(text) => this.setState({contact_person: text})}/>
+					</Item>
+				</View>
+
+				<View style={styles.itemStyle}>
+					<Item>
+						<Input first  placeholder="Phone Number" value={phone_number} onChangeText={(text) => this.setState({phone_number: text})}/>
+					</Item>
+				</View>
+				
+			</View>
+		);
 
 	}
 
@@ -189,22 +292,42 @@ class AddTaskView extends Component {
 
 							<Content>
 
-								<View style={styles.itemStyle}>
-									<Item>
-										<Input first  placeholder="Enter Task Title" value={task_title} onChangeText={(text) => this.setState({task_title: text})}/>
+							<View style={styles.itemStyle}>
+									<Text style={styles.taskPlaceHolder}> Select Client</Text>
+									<RNPickerSelect
+											placeholder={placeholder}
+											style={
+												Platform.OS === 'ios'
+												? styles.inputIOS
+												: styles.inputAndroid
+											}
+											blurOnSubmit={false}
+											onValueChange={(value) => this.onChangeClient(value)}
+											items={clients}
+										/>
+									 
+							</View>
+ 
+								{this.state.isNewClient ? this.newClient() : 
 
-									</Item>
-								</View>
-		
-								<View style={styles.itemStyle}>
-									<Item>								
-										<Textarea  style={styles.commentText} onChangeText={(text) => (this.setState({
-											description: text
-										}))} rowSpan={7} bordered placeholder="Enter Task Descriptions Here!" value={description} />
-									</Item>
-								</View>
+									<View>
+										<View style={styles.itemStyle}>
+										<Item>
+											<Input first  placeholder="Enter Task Title" value={task_title} onChangeText={(text) => this.setState({task_title: text})}/>
 
-								 
+										</Item>
+										</View>
+				
+										<View style={styles.itemStyle}>
+											<Item>								
+												<Textarea  style={styles.commentText} onChangeText={(text) => (this.setState({
+													description: text
+												}))} rowSpan={7} bordered placeholder="Enter Task Descriptions Here!" value={description} />
+											</Item>
+										</View>
+									
+									</View>
+								}
 		
 								<View style={styles.itemStyle}>
 									<DatePicker
@@ -223,23 +346,6 @@ class AddTaskView extends Component {
 									disabled={false}
 									/>
 								</View>
-		
-								<View style={styles.itemStyle}>
-									<Text style={styles.taskPlaceHolder}> Select Client</Text>
-									<RNPickerSelect
-											placeholder={placeholder}
-											style={
-												Platform.OS === 'ios'
-												? styles.inputIOS
-												: styles.inputAndroid
-											}
-											blurOnSubmit={false}
-											onValueChange={(value) => this.onChangeClient(value)}
-											items={clients}
-										/>
-									 
-								</View>
-								 
 		
 								<View>
 									<View style={[styles.itemStyle, {flexDirection: 'row', alignContent:'center', justifyContent:'center'}]}>
@@ -268,7 +374,7 @@ const mapStateToProps = (state) => ({
 	isAdded: state.taskReducer.isAdded
 });
  
-export default connect(mapStateToProps, { AddTask, GetClients, DismissAlert })(AddTaskView);
+export default connect(mapStateToProps, { AddTask, GetClients, DismissAlert, AddNewClient })(AddTaskView);
  
 const styles = StyleSheet.create({
     

@@ -25,7 +25,6 @@ class TaskView extends Component {
 
 	}
 
-
 	componentWillMount() {
 		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
 	}

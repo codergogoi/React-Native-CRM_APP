@@ -14,6 +14,9 @@ const initialState = {
 	isPasswordChanged: false,
 	isWrongPassword: false,
 	isSentPassword: false,
+	attendance: [],
+	login_status: '',
+	marked_attendance: false
 };
 
 export default function(state = initialState, action) {
@@ -29,11 +32,28 @@ export default function(state = initialState, action) {
 				city_id: action.payload.city_id,
 				isLogedIn: true
 			};
+
 		case Actions.VIEW_USER:
 			return {
 				...state,
 				current_user: action.payload
 			};
+		case Actions.VIEW_ATTENDANCE:
+			return {
+				...state,
+				attendance: action.payload
+			};
+		case Actions.CHECK_STATUS:
+				return {
+					...state,
+					login_status: action.payload
+				};
+		case Actions.CAPTURE:
+			return {
+				...state,
+				marked_attendance: true,
+				login_status: action.payload
+			}				
 		case Actions.EDIT_USER:
 			return {
 				...state,
@@ -63,6 +83,7 @@ export default function(state = initialState, action) {
 				isWrongPassword: false,
 				isSentPassword: false,
 				isPasswordChanged: false,
+				marked_attendance: false
 			}
 		case Actions.DELETE:
 			return {

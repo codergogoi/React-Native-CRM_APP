@@ -15,6 +15,7 @@ import ReportIcon from '../../images/report_icon.png';
 import ProfileIcon from '../../images/edit_profile_icon.png';
 import SettingsIcon from '../../images/settings_icon.png';
 import LogoutIcon from '../../images/logout_icon.png';
+import AttendanceIcon from '../../images/attendance.png';
 
 import SplashScreen from '../splash/SplashScreen';
 import LoginScreen from '../login/LoginView'
@@ -226,7 +227,14 @@ const ReportDetails = {
 const Attendance = {
 	screen: AttendanceScreen,
 	navigationOptions: {
-		header: null
+		header: null,
+		drawerLabel: 'Attendance',
+		drawerIcon: ({ tintColor }) => (
+		  <Image
+			source={AttendanceIcon}
+			style={[styles.icon, {tintColor: tintColor}]}
+		  />
+		),
 	}
 };
 

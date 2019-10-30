@@ -18,8 +18,6 @@ export const DoLogin = (postData) => (dispatch) => {
 		})
 		.then((res) =>{
 
-			PRINT(JSON.stringify(res));
-
 				const status = parseInt(res.data.status);
 
 				if (status === 200) {
@@ -52,8 +50,6 @@ export const DoLogin = (postData) => (dispatch) => {
 		.catch((error) => console.log(' Error Encountered'));
 };
 
-
-
 export const TrackUpdate = (postData) => (dispatch) => {
 
 	const { emp_id, lat, lng } = postData;
@@ -80,11 +76,9 @@ export const TrackUpdate = (postData) => (dispatch) => {
 		.catch((error) => console.log(' Error Encountered'));
 };
 
-
 export const ViewUser = (postData) => (dispatch) => {
 	
 	const { emp_id } = postData;
-
 
 	// console.log('Requested Employee'+ emp_id);
 
@@ -120,6 +114,116 @@ export const ViewUser = (postData) => (dispatch) => {
 	// }).done();
 };
 
+
+
+export const ViewAttendance = (postData) => (dispatch) => {
+	
+	const { emp_id } = postData;
+
+
+	axios.defaults.baseURL = BASE_URL;
+	 
+		axios.defaults.headers.common['Authorization'] =  APP_TOKEN();
+		axios
+			.post('/user/attendance/'+emp_id, {
+			})
+			.then((res) =>{
+				
+				const status = parseInt(res.data.status);
+					if (status === 200) {
+						const responseString = JSON.parse(JSON.stringify(res.data));
+						let attendance = responseString.data;
+
+						dispatch({
+							type: Actions.VIEW_ATTENDANCE,
+							payload: attendance
+						})
+					}else{
+						dispatch({
+							type: Actions.VIEW_ATTENDANCE,
+							payload: []
+						})
+					}
+			}
+			)
+			.catch((error) => console.log(' Error Encountered'));
+	// }).done();
+};
+
+
+
+export const CaptureAttendance = (postData) => (dispatch) => {
+	
+	const { emp_id, lat, lng } = postData;
+
+
+	axios.defaults.baseURL = BASE_URL;
+	 
+		axios.defaults.headers.common['Authorization'] =  APP_TOKEN();
+		axios
+			.post('/user/capture/'+emp_id, {
+				lat: lat,
+				lng: lng
+			})
+			.then((res) =>{
+				
+				const status = parseInt(res.data.status);
+					if (status === 200) {
+						const responseString = JSON.parse(JSON.stringify(res.data));
+						let attendance = responseString.data;
+
+						dispatch({
+							type: Actions.CAPTURE,
+							payload: attendance
+						})
+					}else{
+						dispatch({
+							type: Actions.CAPTURE,
+							payload: []
+						})
+					}
+			}
+			)
+			.catch((error) => console.log(' Error Encountered'));
+	// }).done();
+};
+
+
+
+
+export const CheckStatus = (postData) => (dispatch) => {
+	
+	const { emp_id } = postData;
+
+
+	axios.defaults.baseURL = BASE_URL;
+	 
+		axios.defaults.headers.common['Authorization'] =  APP_TOKEN();
+		axios
+			.post('/user/check-status/'+emp_id, {
+			})
+			.then((res) =>{
+				
+				const status = parseInt(res.data.status);
+					if (status === 200) {
+						const responseString = JSON.parse(JSON.stringify(res.data));
+						let attendance = responseString.data;
+
+						dispatch({
+							type: Actions.CHECK_STATUS,
+							payload: attendance
+						})
+					}else{
+						dispatch({
+							type: Actions.CHECK_STATUS,
+							payload: []
+						})
+					}
+			}
+			)
+			.catch((error) => console.log(' Error Encountered'));
+	// }).done();
+};
 
 
 
